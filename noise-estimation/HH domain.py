@@ -116,12 +116,12 @@ for i in range(0,12,2):
     pep_salt_images.append(pep_salt_image)
     coeffs = pywt.dwt2(pep_salt_image, 'haar')
     cA, (cH, cV, cD) = coeffs           #其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
-    pep_salt_image_coeffs.append(cA)
+    pep_salt_image_coeffs.append(cD)
     gauss_image = add_noise(image, "gauss", i)
     gauss_images.append(gauss_image)
     coeffs = pywt.dwt2(gauss_image, 'haar')
     cA, (cH, cV, cD) = coeffs           # 其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
-    gauss_image_coeffs.append(cA)
+    gauss_image_coeffs.append(cD)
 
 #噪音图像的HH子带系数的不同阈值下的能量比矩阵
 pep_salt_ER = zeros((6, 9))
