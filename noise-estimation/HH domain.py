@@ -128,12 +128,12 @@ pep_salt_ER = zeros((6, 9))
 gauss_ER = zeros((6, 9))
 #计算噪音图像的HH子带系数的不同阈值下的能量比矩阵
 for i in range(0, 6):
-    for j in range(100,1000,100):
-        pep_salt_ER[i, j/100 -1] = insignificant_energy_ratio(pep_salt_image_coeffs[i], j)
-        gauss_ER[i,j/100 -1] = insignificant_energy_ratio(gauss_image_coeffs[i], j)
+    for j in range(10,100,10):
+        pep_salt_ER[i, j/10 -1] = insignificant_energy_ratio(pep_salt_image_coeffs[i], j)
+        gauss_ER[i,j/10 -1] = insignificant_energy_ratio(gauss_image_coeffs[i], j)
 
 #得出噪音图像的HH子带系数的不同阈值下的能量比图像
-x = np.arange(100, 1000, 100)
+x = np.arange(10, 100, 10)
 plt.plot(x, pep_salt_ER[0], pep_salt_ER[1], pep_salt_ER[2], pep_salt_ER[3], pep_salt_ER[4], pep_salt_ER[5], color="r", linestyle="-", marker="*", linewidth=1)
 
 plt.plot(x, gauss_ER[0], gauss_ER[1], gauss_ER[2], gauss_ER[3], gauss_ER[4], gauss_ER[5], color="k", linestyle="-", marker="^", linewidth=1)
