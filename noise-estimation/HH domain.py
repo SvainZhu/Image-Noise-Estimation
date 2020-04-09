@@ -55,16 +55,22 @@ def edge_process(image1, image2):    #image1为原始图像，image2为边缘图
 #给图像添加椒盐噪声及高斯噪声
 def add_noise(image, method, intensity):        #image为图像，method为噪音类型，intensit为噪音强度
     if method == "pepper_salt":
-        noise_salt = np.random.randint(0, 256, image.shape)
-        noise_salt = np.where(noise_salt < (intensity / 200 * 256), 255, 0)
-        noise_salt.astype("float")
-        noise_pepper = np.random.randint(0, 256, image.shape)
-        noise_pepper = np.where(noise_pepper < (intensity / 200 * 256), -255, 0)
-        noise_pepper.astype("float")
-        image = image + noise_salt + noise_pepper
+        #使用随机函数生成盐噪声
+        salt_noise = np.random.randint(0, 256, image.shape)
+        salt_noise = np.where(salt_noise < (intensity / 200.0 * 256), 255, 0)
+        salt_noise = salt_noise.astype(float32)
+        #使用随机函数生成椒噪声
+        pepper_noise = np.random.randint(0, 256, image.shape)
+        pepper_noise = np.where(pepper_noise < (intensity / 200.0 * 256), -255, 0)
+        pepper_noise = pepper_noise.astype(float32)
+        #将椒盐噪声添加到图像中去
+        image = image + salt_noise + pepper_noise
         image = np.where(image < 0, 0, np.where(image > 255, 255, image))
     elif method == "gauss":
+        #使用随机函数生成高斯白噪声，均值为0，方差为噪音强度
         gauss_noise = np.random.normal(0, intensity, image.shape)
+        gauss_noise = gauss_noise.astype(float32)
+        #将高斯白噪声添加到图像中去
         image = image + gauss_noise
         image = np.where(image < 0, 0, np.where(image > 255, 255, image))
     else:
