@@ -117,7 +117,7 @@ gauss_images = []
 pep_salt_image_coeffs = []
 gauss_image_coeffs = []
 #迭代得到噪音图像及它们的HH子带系数
-for i in range(0,12,2):
+for i in range(0, 12, 2):
     pep_salt_image = add_noise(image, "pepper_salt", i)
     pep_salt_images.append(pep_salt_image)
     coeffs = pywt.dwt2(pep_salt_image, 'haar')
@@ -134,9 +134,9 @@ pep_salt_ER = zeros((6, 9))
 gauss_ER = zeros((6, 9))
 #计算噪音图像的HH子带系数的不同阈值下的能量比矩阵
 for i in range(0, 6):
-    for j in range(10,100,10):
-        pep_salt_ER[i, j/10 -1] = insignificant_energy_ratio(pep_salt_image_coeffs[i], j)
-        gauss_ER[i,j/10 -1] = insignificant_energy_ratio(gauss_image_coeffs[i], j)
+    for j in range(10, 100, 10):
+        pep_salt_ER[i, j/10 - 1] = insignificant_energy_ratio(pep_salt_image_coeffs[i], j)
+        gauss_ER[i, j/10 - 1] = insignificant_energy_ratio(gauss_image_coeffs[i], j)
 
 #得出噪音图像的HH子带系数的不同阈值下的能量比图像
 x = np.arange(10, 100, 10)
