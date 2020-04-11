@@ -65,12 +65,14 @@ def noisy(noise_typ, image):
         return noisy
 
 
-plt.subplot(121)
+
 plt.title("fourfields")
 plt.imshow(LaplaceAlogrithm(gray_saber, "fourfields"), cmap="binary")
 plt.axis("off")
-plt.subplot(122)
+plt.savefig("Edge image by Laplacian operator in fourfields.jpg")
+plt.clf()
 plt.title("eightfields")
 plt.imshow(LaplaceAlogrithm(gray_saber, "eightfields"), cmap="binary")
 plt.axis("off")
-plt.show()
+plt.savefig("Edge image by Laplacian operator in eightfields.jpg")
+plt.clf()

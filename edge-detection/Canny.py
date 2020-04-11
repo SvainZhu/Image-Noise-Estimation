@@ -119,9 +119,6 @@ for i in range(1, W3 - 1):
             DT[i, j] = 1
 
 dst = 255 - DT
-#plt.imshow(new_gray, cmap=cm.gray)
-#plt.imshow(d, cmap=cm.gray)
-#plt.imshow(NMS, cmap=cm.gray)
 plt.imshow(dst, cmap=cm.gray)
 plt.axis("off")
-plt.show()
+plt.savefig("Edge image by Canny operator.jpg")

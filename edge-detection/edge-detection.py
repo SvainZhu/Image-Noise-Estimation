@@ -38,10 +38,6 @@ image2 = (image2 / float(image2.max())) * 255
 image2[image2 > image2.mean()] = 255
 
 # 显示图像
-plt.subplot(2, 1, 1)
-plt.imshow(image_array, cmap=cm.gray)
-plt.axis("off")
-plt.subplot(2, 1, 2)
 plt.imshow(image2, cmap=cm.gray)
 plt.axis("off")
-plt.show()
+plt.savefig("Edge image by improved algorithm.jpg")

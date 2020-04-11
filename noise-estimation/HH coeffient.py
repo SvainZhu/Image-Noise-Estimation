@@ -41,7 +41,7 @@ image = image.astype(np.float32)
 
 #生成椒盐噪音强度为25%的噪音图像并进行小波变换
 pep_salt_image = add_noise(image, "pepper_salt", 25)
-cv2.imwrite("./pep_salt_image.jpg", pep_salt_image)
+cv2.imwrite("./pepper-salt noise image.jpg", pep_salt_image)
 coeffs = pywt.dwt2(pep_salt_image, 'haar')
 cA, (cH, cV, cD) = coeffs           # 其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
 HH_salt_image = cD.astype(np.int64)
@@ -56,7 +56,7 @@ for i in HH_salt_image:
 
 #生成高斯白噪音强度为25的噪音图像并进行小波变换
 gauss_image = add_noise(image, "gauss", 25)
-cv2.imwrite("./gauss_image.jpg", gauss_image)
+cv2.imwrite("./gauss noise image.jpg", gauss_image)
 coeffs = pywt.dwt2(gauss_image, 'haar')
 cA, (cH, cV, cD) = coeffs           # 其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
 HH_gauss_image = cD.astype(np.int64)
@@ -72,7 +72,7 @@ plt.plot(x, Pcoeff_salt_image, color="k")
 plt.xlabel("Coe")
 plt.ylabel("Pcoe")
 plt.title("Amplitude distribution diagram of HH wavelet coefficient about Pepper-Salt noise image")
-plt.savefig("pep-salt_HH_distribution.jpg")
+plt.savefig("HH coefficient distribution by pepper-salt noise.jpg")
 plt.clf()
 
 #画出高斯噪音图像下噪音图像的HH子带小波系数不同幅值系数出现的概率分布图并保存
@@ -80,5 +80,5 @@ plt.plot(x, Pcoeff_gauss_image, color="k")
 plt.xlabel("Coe")
 plt.ylabel("Pcoe")
 plt.title("Amplitude distribution diagram of HH wavelet coefficient about Gauss noise image")
-plt.savefig("gauss_HH_distribution.jpg")
+plt.savefig("HH coefficient distribution by gauss noise.jpg")
 plt.clf()
