@@ -42,3 +42,7 @@ edge_image[edge_image > edge_image.mean()] = 255
 plt.imshow(edge_image, cmap=cm.gray)
 plt.axis("off")
 plt.savefig("Edge image by improved algorithm.jpg")
+plt.clf()
+plt.imshow(image, cmap=cm.gray)
+plt.axis("off")
+plt.savefig("church.jpg")
