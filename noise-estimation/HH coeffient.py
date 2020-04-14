@@ -47,7 +47,7 @@ cA, (cH, cV, cD) = coeffs           # 其中cA为图像的LL系数，cH为LH系�
 HH_salt_image = cD.astype(np.int64)
 
 #统计HH子带小波系数的分布情况
-amp_range = 300
+amp_range = 400
 Pcoeff_salt_image = zeros((2*amp_range, 1))
 for i in HH_salt_image:
     for j in i:

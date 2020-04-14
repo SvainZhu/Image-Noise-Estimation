@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import scipy.signal as signal
 import pywt
+import os
 #本程序依赖matplotlib, pillow, numpy, scipy,opencv-python等python库
 
 
@@ -89,7 +90,7 @@ def insignificant_energy_ratio(HH_D, T):     #HH_D为HH子带系数矩阵，T为
 
 #定义函数去判断图像噪声的类型
 def noise_type(ER):
-    if ER > 0.5 and ER <= 1:
+    if ER > 0.5 and ER <= 1.1:
         return "gauss"
     elif ER >= 0 and ER <= 0.5:
         return "pepper_salt"
@@ -97,60 +98,72 @@ def noise_type(ER):
         return "Error"
 
 #定义函数去估计图像的噪声
-def noise_estimation(HH_D, method):     #HH_D为HH子带系数矩阵,method为噪音的类型
+def noise_estimation(noise_cD, origin_cD, method):
+    #noise_cD为噪音图像的HH子带系数矩阵,origin_cD为原始图像的HH子带系数矩阵，method为噪音的类型
     if method == "gauss":
-        return np.median(abs(HH_D)) / 0.6745
+        return np.median(abs(noise_cD)) / 0.6745
     elif method == "pepper_salt":
-        p = HH_D.var()
-        return -0.222 + 0.004119*p + 1.794e-07*pow(p, 2) + 1.419e-11*pow(p, 3)
+        amp_range = 250
+        H = 10
+        h_orig = np.histogram(origin_cD, bins=H, range=(0, amp_range), density=True, weights=None)[0]
+        h_noise = np.histogram(noise_cD, bins=H, range=(0, amp_range), density=True, weights=None)[0]
+        p = corrcoef(h_orig, h_noise)[0, 1]
+        return 524.8 - 1637*p +1859*pow(p, 2) - 743.3*pow(p, 3)
+        #return -0.222 + 0.004119*p + 1.794e-07*pow(p, 2) + 1.419e-11*pow(p, 3)
     else:
-        raise ("Type Error")
+        return "Type Error"
+
+T = 60
+images = []
+new_images = []
+origin_cD = []
+N = 100
+for i in range(0, N, 1):
+    image = cv2.imread("../test/" + str(i) + ".jpg")
+    image = cv2.resize(image, (192, 192))
+    # 将多通道图像变为单通道图像
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    image = image.astype(np.float32)
+    images.append(image)
+    cA, (cH, cV, cD) = pywt.dwt2(image, 'sym4')         #其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
+    origin_cD.append(cD)
+
+    image_edge = edge_detection(image)
+    new_image = edge_process(image, image_edge)
+    new_image = new_image.astype(np.float32)
+    new_images.append(new_image)
 
 
-
-image = cv2.imread("../image/church.jpg")
-image = cv2.resize(image, (1080, 1080))
-# 将多通道图像变为单通道图像
-image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-image = image.astype(np.float32)
-
-image_edge = edge_detection(image)
-new_image = edge_process(image, image_edge)
-new_image = new_image.astype(np.float32)
-T = 70
-#添加噪音之后的图像列表
-pep_salt_images = []
-gauss_images = []
-
-gauss_new_images = []
 #噪音图像的HH子带系数
-pep_salt_image_intensity = []
-gauss_image_intensity = []
-gauss_new_image_intensity = []
+pep_salt_image_intensity = zeros((10, N))
+gauss_image_intensity = zeros((10, N))
+pep_salt_intensity_mean = zeros((10, 1))
+pep_salt_intensity_var = zeros((10, 1))
+
+gauss_intensity_mean = zeros((10, 1))
+gauss_intensity_var = zeros((10, 1))
 #迭代得到噪音图像及它们的HH子带系数
-for i in range(0, 42, 2):
-    pep_salt_image = add_noise(image, "pepper_salt", i)
-    pep_salt_images.append(pep_salt_image)
-    coeffs = pywt.dwt2(pep_salt_image, 'haar')
-    cA, (cH, cV, cD) = coeffs           #其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
-    ER = insignificant_energy_ratio(cD, T)
-    pep_salt_image_intensity.append(noise_estimation(cD, noise_type(ER)))
+for i in range(2, 22, 2):
+    for j in range(0, N, 1):
+        pep_salt_image = add_noise(images[j], "pepper_salt", i)
+        coeffs = pywt.dwt2(pep_salt_image, 'sym4')
+        cA, (cH, cV, cD) = coeffs           #其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
+        ER = insignificant_energy_ratio(cD, T)
+        pep_salt_image_intensity[i/2-1, j] = noise_estimation(cD, origin_cD[j], noise_type(ER))
 
 
-    # gauss_image = add_noise(image, "gauss", i)
-    # gauss_images.append(gauss_image)
-    # coeffs = pywt.dwt2(gauss_image, 'haar')
-    # cA, (cH, cV, cD) = coeffs           # 其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
-    # ER = insignificant_energy_ratio(cD, T)
-    # gauss_image_intensity.append(noise_estimation(cD, noise_type(ER)))
-    #
-    # gauss_new_image = add_noise(new_image, "gauss", i)
-    # gauss_new_images.append(gauss_new_image)
-    # coeffs = pywt.dwt2(gauss_new_image, 'haar')
-    # cA, (cH, cV, cD) = coeffs  # 其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
-    # ER = insignificant_energy_ratio(cD, T)
-    # gauss_new_image_intensity.append(noise_estimation(cD, noise_type(ER)))
+        gauss_image = add_noise(new_images[j], "gauss", i)
+        coeffs = pywt.dwt2(gauss_image, 'sym4')
+        cA, (cH, cV, cD) = coeffs           # 其中cA为图像的LL系数，cH为LH系数，cV为HL系数以及cD为HH系数
+        ER = insignificant_energy_ratio(cD, T)
+        gauss_image_intensity[i/2-1, j] = noise_estimation(cD, origin_cD[j], noise_type(ER))
 
-print(pep_salt_image_intensity)
-# print(gauss_image_intensity)
-# print(gauss_new_image_intensity)
+for i in range(0, 10, 1):
+    pep_salt_intensity_mean[i, 0] = np.mean(pep_salt_image_intensity[i, :])
+    pep_salt_intensity_var[i, 0] = np.var(pep_salt_image_intensity[i, :])
+    gauss_intensity_mean[i, 0] = np.mean(gauss_image_intensity[i, :])
+    gauss_intensity_var[i, 0] = np.var(gauss_intensity_var[i, :])
+
+
+print(pep_salt_intensity_mean)
+print(gauss_intensity_mean)
