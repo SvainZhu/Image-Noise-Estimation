@@ -2,13 +2,9 @@
 import cv2
 from pylab import *
 import numpy as np
-from PIL import Image
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 import scipy.signal as signal
 import pywt
-import os
-#本程序依赖matplotlib, pillow, numpy, scipy,opencv-python等python库
+#本程序依赖matplotlib, numpy, scipy,opencv-python等python库
 
 
 # 生成高斯算子的函数
@@ -162,8 +158,10 @@ for i in range(0, 10, 1):
     pep_salt_intensity_mean[i, 0] = np.mean(pep_salt_image_intensity[i, :])
     pep_salt_intensity_var[i, 0] = np.var(pep_salt_image_intensity[i, :])
     gauss_intensity_mean[i, 0] = np.mean(gauss_image_intensity[i, :])
-    gauss_intensity_var[i, 0] = np.var(gauss_intensity_var[i, :])
+    gauss_intensity_var[i, 0] = np.var(gauss_image_intensity[i, :])
 
 
-print(pep_salt_intensity_mean)
-print(gauss_intensity_mean)
+print(pep_salt_intensity_mean.T)
+print(pep_salt_intensity_var.T)
+print(gauss_intensity_mean.T)
+print(gauss_intensity_var.T)
