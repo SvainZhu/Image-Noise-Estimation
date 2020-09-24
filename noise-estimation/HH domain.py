@@ -4,7 +4,8 @@ from pylab import *
 import numpy as np
 import scipy.signal as signal
 import pywt
-#本程序依赖matplotlib, numpy, scipy,opencv-python等python库
+import prettytable as pt
+#本程序依赖matplotlib, numpy, scipy,opencv-python,prettytable等python库
 
 
 # 生成高斯算子的函数
@@ -160,8 +161,12 @@ for i in range(0, 10, 1):
     gauss_intensity_mean[i, 0] = np.mean(gauss_image_intensity[i, :])
     gauss_intensity_var[i, 0] = np.var(gauss_image_intensity[i, :])
 
-
-print(pep_salt_intensity_mean.T)
-print(pep_salt_intensity_var.T)
-print(gauss_intensity_mean.T)
-print(gauss_intensity_var.T)
+#生成表格输出噪声估计结果
+tb = pt.PrettyTable()
+x = np.arange(2, 22, 2)
+tb.add_column(u"  噪声强度实际值  ", x)
+tb.add_column(u"  椒盐噪声估计值  ", np.array(pep_salt_intensity_mean).flatten())
+tb.add_column(u"椒盐噪声估计方差值 ", np.array(pep_salt_intensity_var).flatten())
+tb.add_column(u" 高斯白噪声估计值  ", np.array(gauss_intensity_mean).flatten())
+tb.add_column(u"高斯白噪声估计方差值", np.array(gauss_intensity_var).flatten())
+print(tb)

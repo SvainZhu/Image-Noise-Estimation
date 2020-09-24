@@ -98,5 +98,4 @@ plt.plot(x, gauss_ER[5], color="k", linewidth=1)
 plt.xlabel("T")
 plt.ylabel("ER")
 #不同噪音强度及阈值下的HH系数能量比
-plt.title("Energy ratio of HH coefficient at different noise levels and thresholds")
 plt.savefig("ER graph by different T parameter.jpg")
