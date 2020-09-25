@@ -21,7 +21,7 @@
 
 ## 程序用法
 * edge-detection: 该文件夹包含Canny算子、Prewitt算子、Roberts算子、Sober算子以及经过我改进后的Laplacian算子，用church图像为例得出它们的边缘检测图
-* noise-estimation: 该文件夹包含主程序，其中HH coefficient为检测图像噪声的自适应算法。T-parameter用于确定椒盐噪声和高斯噪声ER分界线的阈值；pepper-salt noise estimation用于拟合椒盐噪声的HH子带偏离程度与噪声强度之间的函数关系式。
+* noise-estimation: 该文件夹包含主程序，其中HH domain为检测图像噪声的自适应算法; HHH coefficient 是不同类型的噪声图像的HH子带小波系数的能量占比ER的变化趋势；T-parameter用于确定椒盐噪声和高斯噪声ER分界线的阈值；pepper-salt noise estimation用于拟合椒盐噪声的HH子带偏离程度与噪声强度之间的函数关系式。
 * test：[Corel5K图像集](https://github.com/watersink/Corel5K)中随机选取的100副原始图像用于测试程序。
 
-使用该程序时运行HH coefficient.py即可得到测试集的测试结果
+使用该程序时运行HH domain.py即可得到测试集的测试结果
